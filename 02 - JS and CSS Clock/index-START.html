@@ -62,13 +62,42 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform: rotate(90deg);
+      transform-origin: 100%;
+      transition: all 0.05s;
+      transition-timing-function: (0.1, 2.7, 0.58, 1);
     }
 
   </style>
 
   <script>
+    // variables that reference the corresponding HTML element for each clock hand
+    const secondHand = document.querySelector('.second-hand');
+    const hourHand = document.querySelector('.hour-hand');
+    const minHand = document.querySelector('.min-hand');
 
+    /*
+    Calculates the number of degrees we need to rotate each clock hand by:
+      Divide the current numerical value of the clock hand by it's max possible value to get the rotation as a percentage
+      Multiply the result of that by 360 (each hand can rotate 360 degrees) to convert the value from a percentage to an integer
+      Increase that result by another 90 degrees to compensate for the shift originally applied by the CSS styling on page load
+    */
+    const calculateDegrees = (time, max) => ((time/max) * 360) + 90;
 
+    // Call function once every second
+    setInterval(() => {
+    // Create a new Date object
+      const now = new Date();
+      // Get current seconds, minutes, & hours and calculate the degree shift
+      const
+        secondHandDegrees = calculateDegrees(now.getSeconds(), 60),
+        minuteHandDegrees = calculateDegrees(now.getMinutes(), 60),
+        hourHandDegrees = calculateDegrees(now.getHours(), 12);
+      // Apply rotation to the clock hands corresponding with current time value
+      secondHand.style.transform = `rotate(${secondHandDegrees}deg)`;
+      minuteHand.style.transform = `rotate(${minuteHandDegrees}deg)`;
+      hourHand.style.transform = `rotate(${hourHandDegrees}deg)`;
+    }, 1000);
   </script>
 </body>
 </html>
