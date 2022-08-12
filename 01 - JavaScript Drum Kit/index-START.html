@@ -58,7 +58,32 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('playing');
+  }
 
+  function playSound(e) {
+    // audio and key reference the div and audio elements that correspond with the keypress which triggered the function (if exists)
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+    // if key pressed doesn't match one of the keys defined, we don't proceed
+    if (!audio) return;
+    // if it does, we use the variable referencing div element (key) to add the playing class to it
+    key.classList.add('playing');
+    audio.currentTime = 0;
+    // play the audio using the variable referencing the audio element
+    audio.play();
+  }
+
+  // declare & define a variable which will reference all the HTML elemetns on the page with class `key`
+  const keys = Array.from(document.querySelectorAll('.key'));
+  // loop through array of keys (HTML elements), and add an event listener to each one that will fire the transitioned event
+  // provide removeTransition as second argument which is responsible for removing the `playing`
+  keys.forEach(key => key.addEventListener('transitioned', removeTransition));
+  // on the global window object, add an event listener that is listening for a keydown event
+  // pass in playSound as a callback function
+  window.addEventListener('keydown', playSound);
 </script>
 
 
